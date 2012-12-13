@@ -1,0 +1,95 @@
+<%@ Master Language="C#" AutoEventWireup="true"  MasterPageFile="../master1/Master1.Master" CodeFile="Master2.master.cs" Inherits="CPHFixes.Test.master2.Master2" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="Head1" runat="server">
+    <!-- These have visible='false', and should never be seen-->
+    <link type="text/css" visible="false" rel="stylesheet" href="master2-hidden.css" />
+    <link type="text/css" visible="false" rel="stylesheet" href="master2-hidden.css" runat="server" />
+    
+    <!-- Thes will only be loaded if the patch is running -->
+    <link type="text/css" rel="stylesheet" href="master2.css" />
+    <link type="text/css" rel="stylesheet" href="master2-server.css" runat="server" />
+    
+        <!-- The parsing of these doesn't affect output, just the intermediate control tree. We'll check these server-side and
+         convert them to css selectors so we can have output -->
+    <meta name="master2" content="css" />
+    <meta name="master2-server" content="css" runat="server"/>
+    
+    <script type="text/javascript" src="script.js" ></script>
+    
+    <asp:ContentPlaceHolder ID="Head2" runat="server">
+    </asp:ContentPlaceHolder>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="Body1" runat="server">
+<h1>From master2/Master2.master</h1>
+        <div class="master2-hidden-showthis error" style="display:none;">
+            master2-hidden.css loaded - it shouldn't have been rendered. The visible="false" attribute did not correctly hide one of the 'hidden' stylesheet references.
+        </div>
+        <div class="master2-hidden-hidethis ok">
+            master2-hidden.css was not loaded. 
+            If the other files failed to load, then this is just another failure.
+            If the subsequent files loaded, then the visible="false" attribute correctly hid both of the 'hidden' stylesheet references.
+   
+        </div>
+        
+        <div class="master2-showthis ok" style="display:none;">
+            master2.css loaded. This is inside a CPH, and isn't parsed by default. The patch should make this work, though.
+        </div>
+        <div class="master2-hidethis error">
+            master2.css failed. This is inside a CPH, and doesn't work by default. 
+            This reference actually has to fight 2 bugs. 1) it isn't parsed, and 2) If it was parsed, the TemplateControl reference of the parent would be wrong.
+            The patch should fix both issues.
+        </div>
+        <div class="master2-server-showthis ok" style="display:none;">
+            master2-server.css loaded. (runat="server" reference) This is inside a CPH, and isn't parsed by default. The patch should make this work, though.
+        </div>
+        <div class="master2-server-hidethis error">
+            master2-server.css failed. (runat="server" reference)  This is inside a CPH, and doesn't work by default. 
+            This reference actually has to fight 2 bugs. 1) it isn't parsed, and 2) If it was parsed, the TemplateControl reference of the parent would be wrong.
+            The patch should fix both issues.
+        </div>
+        
+            <div class="meta-master2-showthis ok" style="display:none;">
+      meta name="master2" was found in the control tree. We're inside a CPH, so the patch is needed to make this work.    
+    </div>
+    
+    <div class="meta-master2-hidethis error">
+    meta name="master2" was not found in the control tree. We're inside a CPH, so the patch is needed to make this work.  
+    </div>
+    
+        <div class="meta-master2-server-showthis ok" style="display:none;">
+      meta name="master2-server" was found in the control tree.We're inside a CPH, so the patch is needed to make this work.   
+    </div>
+    
+    <div class="meta-master2-server-hidethis error">
+    meta name="master2-server" was not found in the control tree. We're inside a CPH, so the patch is needed to make this work.    
+    </div>
+    
+            <div id="div1" runat="server">
+        The Parent.TemplateControl.AppRelativeVirtualPath property here is <asp:Label ID="lbl1" runat="server" />.
+        Unless the framework has been fixed, this should be pointing the the previous template control. You can use
+        GetAdjustedParentTemplateControl(Parent) instead of Parent.TemplateControl to avoid this problem.
+        </div>
+
+        <div id="div2" runat="server">
+        <asp:PlaceHolder runat="server">
+        &lt;asp:PlaceHolder runat="server">
+        <p>
+        The Parent.TemplateControl.AppRelativeVirtualPath property here is <asp:Label ID="lbl2" runat="server" />.
+        This should be always work, since the intermedate asp:PlaceHolder control will have cached it's TemplateControl property from before the insertion of the master page controls.</p>
+        &lt;/asp:PlaceHolder>
+        </asp:PlaceHolder>
+        </div>
+                        <div id="div3" runat="server">
+        The GetAdjustedParentTemplateControl(Parent).AppRelativeVirtualPath 
+        property here is <asp:Label ID="lbl3" runat="server" />.
+        </div>
+        <script type="text/javascript">
+        //<!--
+         var m = " Script references don't work by default, but the patch should parse this into a ScriptReference instance.";
+          if (window.master2) ok("Loaded master2/script.js. Patch enabled.");
+          else err("Failed to load master2/script.js." + m);
+        //-->
+        </script>
+        <asp:ContentPlaceHolder ID="Body2" runat="server">
+        </asp:ContentPlaceHolder>
+</asp:Content>

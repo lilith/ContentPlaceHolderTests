@@ -1,0 +1,1 @@
+window.master2 = true;
