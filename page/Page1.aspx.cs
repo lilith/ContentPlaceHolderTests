@@ -15,11 +15,11 @@ namespace CPHFixes.Test.page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (this.Request.Url.OriginalString.IndexOf("page",  StringComparison.OrdinalIgnoreCase) > -1){
-                Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "alert",
-                    "alert('Please use Test.aspx for the full test. Some tests will succeed incorrectly if Page1.aspx is accessed directly.');"
-                , true);
-            }
+            //if (this.Request.Url.OriginalString.IndexOf("page",  StringComparison.OrdinalIgnoreCase) > -1){
+            //    Page.ClientScript.RegisterClientScriptBlock(this.GetType(), "alert",
+            //        "alert('Please use Test.aspx for the full test. Some tests will succeed incorrectly if Page1.aspx is accessed directly.');"
+            //    , true);
+            //}
             //output TemplateControl.AppRelativeVirtualPath
 
             //The .Parent.Parent is to account for the <div runat="server">  we are using to apply the css.

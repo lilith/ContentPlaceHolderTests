@@ -20,6 +20,7 @@ namespace CPHFixes.Test.master1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            form1.Action = ResolveUrl("~/"); //Force a post-back to the real page
             DoWork();
         }
         protected override void OnPreRender(EventArgs e)
