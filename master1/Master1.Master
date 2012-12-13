@@ -1,0 +1,150 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Master1.master.cs" Inherits="CPHFixes.Test.master1.Master1" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <style type="text/css">
+    * {
+    font-family:verdana;
+    font-size:8.5pt;
+    line-height:1.8em;
+    }
+    .error{
+        color:red;
+        border:1px solid red;
+    }
+    .ok{
+    border:1px solid green;
+    color:green;
+    }
+    div{
+    padding:2em;
+    margin:2em;
+    
+    }
+    </style>
+    
+    <script type="text/javascript">
+    //<!--
+    function ok(message){
+    document.write("<div class=\"ok\">" + message + "</div>");
+    }
+    function err(message){
+    document.write("<div class=\"error\">" + message + "</div>");
+    }
+    
+    
+    //-->
+    </script>
+    
+        <!-- These have visible='false', and should never be seen-->
+    <link type="text/css" visible="false" rel="stylesheet" href="master2-hidden.css" />
+    <link type="text/css" visible="false" rel="stylesheet" href="master2-hidden.css" runat="server" />
+    
+    
+    <link type="text/css" rel="stylesheet" href="master1.css" />
+    <link type="text/css" rel="stylesheet" href="master1-server.css"  runat="server" />
+    
+    <script type="text/javascript" src="script.js" ></script>
+    
+    <!-- The parsing of these doesn't affect output, just the intermediate control tree. We'll check these server-side and
+         convert them to css selectors so we can have output -->
+    <meta name="master1" content="css" />
+    <meta name="master1-server" content="css" runat="server"/>
+    
+    <asp:ContentPlaceHolder ID="Head1" runat="server">
+    </asp:ContentPlaceHolder>
+    
+    <asp:Literal ID="metaCss" runat="server" enableviewstate ="false" />
+</head>
+<body>
+    <form id="form1" runat="server" action="">
+    
+       <script type="text/javascript">
+    //<!--
+    document.getElementById('aspnetForm').attributes.removeNamedItem('action'); //So postbacks don't change url
+    //-->
+    </script>
+    <div>
+    <div style="background:#f7f7f7; padding:30px; text-align:center">
+    <asp:CheckBox runat="server" AutoPostBack="true" ID="chkPatch"  /> Enable the ContentPlaceHolder patch.
+    <p runat="server" id="timeInfo" visible="false">RepairPageHeader call took <asp:Label ID="lblRepairTime" runat="server" />.</p>
+    </div>
+    
+    <h1>From master1/Master1.Master (should work by default)</h1>      
+    
+    <div class="master1-hidden-showthis error" style="display:none;">
+            master1-hidden.css loaded - it shouldn't have been rendered. The visible="false" attribute did not correctly hide one of the 'hidden' stylesheet references.
+        </div>
+        <div class="master1-hidden-hidethis ok">
+            master1-hidden.css was not loaded. 
+            If the other files failed to load, then this is just another failure.
+            If the subsequent files loaded, then the visible="false" attribute correctly hid both of the 'hidden' stylesheet references.
+   
+        </div>
+        
+    <div class="master1-showthis ok" style="display:none;">
+        master1.css loaded. This reference isn't inside a CPH (Content Place Holder), 
+        and should work by default.
+    </div>
+    <div class="master1-hidethis error">
+        master1.css failed.
+        This reference isn't inside a CPH (Content Place Holder), 
+        and should work by default.
+    </div>
+    <div class="master1-server-showthis ok" style="display:none;">
+        master1-server.css loaded.
+        This is displayed by a runat="server" stylesheet reference in the root master page. This reference isn't inside a CPH (Content Place Holder), 
+        and should work by default.
+    </div>
+    <div class="master1-server-hidethis error">
+        master1-server.css failed.
+        This should be hidden by a runat="server"  stylesheet reference in the root master page. 
+        This reference isn't inside a CPH (Content Place Holder), 
+        and should work by default.
+    </div>
+    <div class="meta-master1-showthis ok" style="display:none;">
+      meta name="master1" was found in the control tree. This should always work, since we haven't hit a CPH yet.    
+    </div>
+    
+    <div class="meta-master1-hidethis error">
+    meta name="master1" was not found in the control tree. This *should* work regardless, since we haven't hit a CPH yet.    
+    </div>
+    
+        <div class="meta-master1-server-showthis ok" style="display:none;">
+      meta name="master1-server" was found in the control tree. This should always work, since we haven't hit a CPH yet.    
+    </div>
+    
+    <div class="meta-master1-server-hidethis error">
+    meta name="master1-server" was not found in the control tree. This *should* work regardless, since we haven't hit a CPH yet.    
+    </div>
+            <script type="text/javascript">
+        //<!--
+          if (window.master1) ok("Loaded master1/script.js.");
+          else err("Failed to load master1/script.js. Doesn't work by default. The patch is needed to fix it.");
+        //-->
+        </script>
+
+        <div id="div1" runat="server">
+        The Parent.TemplateControl.AppRelativeVirtualPath property here is <asp:Label ID="lbl1" runat="server" />.
+        This should work because we aren't inside a CPH.
+        </div>
+        <div id="div2" runat="server">
+        <asp:PlaceHolder runat="server">
+        &lt;asp:PlaceHolder runat="server">
+        <p>
+        The Parent.TemplateControl.AppRelativeVirtualPath property here is <asp:Label ID="lbl2" runat="server" />.
+        This should work because we aren't inside a CPH, and even if we were, there is an intermediate PlaceHolder control to fix the problem.
+        </p>
+        &lt;/asp:PlaceHolder>
+        </asp:PlaceHolder>
+        </div>
+        
+        <asp:ContentPlaceHolder ID="Body1" runat="server">
+        </asp:ContentPlaceHolder>
+       
+    </div>
+    </form>
+</body>
+</html>
